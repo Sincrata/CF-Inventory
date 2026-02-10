@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Inventory</title>
+  <link rel="icon" href="Planet.ico">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="Planet.ico">
+  <style>
+#myo-grid, #trait-grid, #voucher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 280px);
+    gap: 1rem;
+    justify-content: center; /* centers the whole set of columns */
+}
+
+
+.myo, .trait, .voucher { width: 280px; /* exact card width */ background: #582a98; padding: 1rem; border-radius: 8px; }
+
+	.myo-image, .trait-image, .voucher-image{
+    		width: 100%;
+    		height: auto;
+    		display: block;
+    		border-radius: 6px;
+	}
+
+	.myo-title, .trait-title, .voucher-title{
+    		margin: 0.5rem 0;
+    		font-size: 1.2rem;
+		text-align: center;
+	}
+
+	.myo-info p, .trait-info p, .voucher-info p{
+    		margin: 0;
+    		font-size: 0.9rem;
+		text-align: center;
+	}
+  </style>
+</head>
+<body>
+	<header id="header"></header>
+	<main>
+		<h1 id="title"> X's Inventory</h1>
+		<hr>
+
+		<article id="myos">
+			<div id="myo-header"><h2>MYOs</h2></div>
+			<div id="myo-body">
+				<div id="myo-grid">
+				</div>
+			</div>
+		</article>
+
+
+		<article id="traits">
+			<div id="traits-header"><h2>Traits & Packs</h2></div>
+			<div id="traits-body">
+				<div id="trait-grid">
+				</div>
+			</div>
+		</article>
+
+		<article id="vouchers">
+			<div id="vouchers-header"><h2>Redesign Vouchers: $0</h2></div>
+			<div id="vouchers-body">
+				<div id="voucher-grid">
+				</div>
+			</div>
+		</article>
+	
+	</main>
+	<script src="scripts.js"></script>
+	<script>
+	async function main() {
+		const params = new URLSearchParams(window.location.search);
+		var username = params.get("username") ?? "default";
+
+		function capitalizeFirstWord(str) {
+    			if (!str) return "";
+    			const [first, ...rest] = str.trim().split(/\s+/);
+    			return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() + 
+           			(rest.length ? " " + rest.join(" ") : "");
+		}
+		
+		username = capitalizeFirstWord(username);
+
+		
+		const title = document.getElementById("title");
+		title.innerHTML = `${username}'s Inventory`;
+
+		if(username =="default"){
+			//do something?
+		}
+
+		async function fetchCSV(url) {
+    			const res = await fetch(url);
+    			const text = await res.text();
+    			return text;
+		}
+
+		function parseCSV(text) {
+    			return text
+        		.trim()
+        		.split("\n")
+        		.map(row => row.split(","));
+		}
+
+		function filterRows(rows, colAName, colAValue, colBName, colBValue) {
+    			const header = rows[0];
+    			const data = rows.slice(1);
+
+    			const colAIndex = header.indexOf(colAName);
+    			const colBIndex = header.indexOf(colBName);
+
+    			return data.filter(row =>
+        			row[colAIndex].toLowerCase() === colAValue.toLowerCase() &&
+        			row[colBIndex].toLowerCase() === colBValue.toLowerCase()
+    			);
+		}
+	
+		function filterRows2(rows, colAName, colAValue, colBName, colBValue) {
+    			const header = rows[0];
+    			const data = rows.slice(1);
+
+    			const colAIndex = header.indexOf(colAName);
+    			const colBIndex = header.indexOf(colBName);
+
+    			return data.filter(row =>
+        			row[colAIndex].toLowerCase() === colAValue.toLowerCase() &&
+        			row[colBIndex].toLowerCase() != colBValue.toLowerCase()
+    			);
+		}
+
+		async function loadFilteredMYOData() {
+    			const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRclpELOsw7e_9hsNHgafNBOtAwe76GOxPDX5rvX243m7Q6W8hqOTsw7k8kIEvOZKJSQTVOsuXmwCyK/pub?gid=1756069810&single=true&output=csv";
+
+    			const csv = await fetchCSV(url);
+    			const rows = parseCSV(csv);
+
+    			const results = filterRows(
+        			rows,
+        			"Username",  username,
+        			"Used", "unused"
+    			);
+
+    			console.log(results);
+			return results;
+		}
+
+		const myos = await loadFilteredMYOData();
+
+		var html = "";
+
+		for (let i = 0; i < myos.length; i++) { 
+			const myo = myos[i]
+			html += `<div class="myo"> 
+			<img class="myo-image" src="${myo[3]}">
+			<h4 class="myo-title">${capitalizeFirstWord(myo[4])} #${myo[2]}</h4>
+			<div class="myo-info">
+				<p>From: ${myo[5]}</p>
+				<p>Date: ${myo[6]}</p>
+			</div>
+			</div>
+			
+			`;
+		}
+
+		
+		if(html == ""){
+			html = `<div class="myo"> <h4 class="myo-title">No Unused MYOs Found</h4></div>`;
+		}
+		const myogrid = document.getElementById("myo-grid");
+
+		myogrid.innerHTML = html;
+
+		async function loadFilteredTraitData() {
+    			const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRclpELOsw7e_9hsNHgafNBOtAwe76GOxPDX5rvX243m7Q6W8hqOTsw7k8kIEvOZKJSQTVOsuXmwCyK/pub?gid=677812775&single=true&output=csv";
+
+    			const csv = await fetchCSV(url);
+    			const rows = parseCSV(csv);
+
+    			const results = filterRows(
+        			rows,
+        			"Username",  username,
+        			"Used", ""
+    			);
+
+    			console.log(results);
+			return results;
+		}
+
+		const traits = await loadFilteredTraitData();
+		
+		html = "";
+		
+
+		for (let i = 0; i < traits.length; i++) { 
+			const trait = traits[i]
+			html += `<div class="trait"> 
+			<img class="trait-image" src="${trait[2]}">
+			<h4 class="trait-title">${trait[3]}</h4>
+			<div class="trait-info">
+				<p>From: ${trait[4]}</p>
+				<p>Date: ${trait[5]}</p>
+			</div>
+			</div>
+			
+			`;
+		}
+
+		
+		if(html == ""){
+			html = `<div class="trait"> <h4 class="trait-title">No Unused Traits Found</h4></div>`;
+		}
+		const traitgrid = document.getElementById("trait-grid");
+
+		traitgrid.innerHTML = html;
+
+
+
+		async function loadFilteredVoucherData() {
+    			const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRclpELOsw7e_9hsNHgafNBOtAwe76GOxPDX5rvX243m7Q6W8hqOTsw7k8kIEvOZKJSQTVOsuXmwCyK/pub?gid=1273044878&single=true&output=csv";
+
+    			const csv = await fetchCSV(url);
+    			const rows = parseCSV(csv);
+
+    			const results = filterRows2(
+        			rows,
+        			"Username",  username,
+        			"Remaining", "0"
+    			);
+
+    			console.log(results);
+			return results;
+		}
+
+		const vouchers = await loadFilteredVoucherData();
+		
+		html = "";
+
+		var total = 0;
+		
+
+		for (let i = 0; i < vouchers.length; i++) { 
+			const voucher = vouchers[i]
+			total += parseFloat(voucher[5], 10);
+			html += `<div class="voucher"> 
+			<img class="voucher-image" src="${voucher[2]}">
+			<h4 class="voucher-title">$${voucher[3]} Redesign Voucher</h4>
+			<div class="voucher-info">
+				<p>Used: $${voucher[4]}</p>
+				<p>Remaining: $${voucher[5]}</p>
+				<p>From: ${voucher[6]}</p>
+				<p>Date: ${voucher[7]}</p>
+			</div>
+			</div>
+			
+			`;
+		}
+
+		
+		if(html == ""){
+			html = `<div class="trait"> <h4 class="trait-title">No Unused Redesign Vouchers Found</h4></div>`;
+		}
+		const vouchergrid = document.getElementById("voucher-grid");
+
+		vouchergrid.innerHTML = html;
+
+		const counter = document.getElementById("vouchers-header");
+		
+		counter.innerHTML = `<h2>Redesign Vouchers: $${total}</h2>`;
+	}
+	main();
+	</script>
+</body>
+</html>

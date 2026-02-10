@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Candyfloss Inventory</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="Planet.ico">
+  <style>
+	
+  </style>
+</head>
+<body>
+	<header id="header"></header>
+	<main>
+		<article id="information">
+			<div id="information-header"><h1>Information</h1></div>
+			<hr>
+			<div id="information-body" class="two-col">
+				<div id="information-text" class="left">
+					<p>Paxton is owned by  Keithernet.  You might find Keithernet (aka Noli) relentlessly sniffing  out bugs or  making a new peppermint floss. They're a bug-finding,   peppermint-loving, machine. They've been a part of the community for   several years now and recently become more active again. We missed them   and are happy to see them around again. Say hi to them if you see them   and give them a big thanks for finding all the bugs and making the   community a better place! Thanks, Keithernet!</p>
+				</div>
+				<img id="info-pic" src="https://f2.toyhou.se/file/f2-toyhou-se/images/99574882_NFnvFIOqdlZ0Mu2.png" class="right">
+			</div>
+		</article>
+		<article id="onto-inventory">
+			<div class="two-col vertical-center">
+				<img id="btn-pic" src="https://f2.toyhou.se/file/f2-toyhou-se/images/93640345_rUDX1zEarYH9ZNZ.png" class="left">	
+				<div class="right short">
+					<h1>Enter Username</h1>
+					<hr>
+					<input class="input" id="username" type="text" placeholder="Enter Username..."></input>
+					<br>
+					<button id="inventory-button" class="btn" style="width: 75%;" disabled>Go To Inventory</button>
+				</div>
+			</div>
+		</article>
+	
+	</main>
+	<script src="scripts.js"></script>
+	<script>
+		const invbtn = document.getElementById("inventory-button");
+		const username = document.getElementById("username");
+
+		var userinput = username.value;
+
+		username.addEventListener("keyup", () => {
+			if(username.value.length > 0){
+				invbtn.disabled = false;
+			}else{
+				invbtn.disabled = true;
+			}
+			userinput = username.value;
+		});
+
+		invbtn.addEventListener("click", () => {
+    			const encoded = encodeURIComponent(userinput);
+			window.location.href = `inventory.html?username=${encoded}`;
+		});
+
+
+	</script>
+</body>
+</html>
