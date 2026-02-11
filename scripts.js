@@ -1,6 +1,6 @@
 const head = document.getElementById("header");
 head.innerHTML = `
-    <img src="https://i.imgur.com/X76in4a.jpeg" alt="Website Banner" class="banner">
+    <img src="https://f2.toyhou.se/file/f2-toyhou-se/images/114938699_62EJrqIcgioS3BT.png" alt="Website Banner" class="banner">
 
     <nav>
         <ul id="button-bar">
