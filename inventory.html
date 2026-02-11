@@ -15,7 +15,7 @@
 }
 
 
-.myo, .trait, .voucher { width: 280px; /* exact card width */ background: #582a98; padding: 1rem; border-radius: 8px; }
+.myo, .trait, .voucher { width: 280px; background: #582a98; padding: 1rem; border-radius: 8px; }
 
 	.myo-image, .trait-image, .voucher-image{
     		width: 100%;
@@ -101,8 +101,12 @@
 		function parseCSV(text) {
     			return text
         		.trim()
-        		.split("\n")
-        		.map(row => row.split(","));
+        		.split(/\r?\n/)
+        		.map(line =>
+            			line
+                	.split(",")
+                	.map(cell => cell.replace(/^"|"$/g, "")) // strip surrounding quotes
+        		);
 		}
 
 		function filterRows(rows, colAName, colAValue, colBName, colBValue) {
@@ -112,11 +116,31 @@
     			const colAIndex = header.indexOf(colAName);
     			const colBIndex = header.indexOf(colBName);
 
-    			return data.filter(row =>
-        			row[colAIndex].toLowerCase() === colAValue.toLowerCase() &&
-        			row[colBIndex].toLowerCase() === colBValue.toLowerCase()
-    			);
+    			if (colAIndex === -1 || colBIndex === -1) {
+        		console.error("Column name not found in header:", { header, colAName, colBName });
+        		return [];
+    			}
+
+    			const maxIndex = Math.max(colAIndex, colBIndex);
+
+    			return data.filter(row => {
+        			if (!row || row.length <= maxIndex) {
+            			// too short to safely read both columns → ignore
+            			return false;
+        			}
+
+        			const a = row[colAIndex];
+        			const b = row[colBIndex];
+
+        			if (a == null || b == null) {
+            				return false;
+        			}
+
+        			return a.toLowerCase() === colAValue.toLowerCase() &&
+               			b.toLowerCase() === colBValue.toLowerCase();
+    			});
 		}
+
 	
 		function filterRows2(rows, colAName, colAValue, colBName, colBValue) {
     			const header = rows[0];
@@ -125,10 +149,29 @@
     			const colAIndex = header.indexOf(colAName);
     			const colBIndex = header.indexOf(colBName);
 
-    			return data.filter(row =>
-        			row[colAIndex].toLowerCase() === colAValue.toLowerCase() &&
-        			row[colBIndex].toLowerCase() != colBValue.toLowerCase()
-    			);
+    			if (colAIndex === -1 || colBIndex === -1) {
+        		console.error("Column name not found in header:", { header, colAName, colBName });
+        		return [];
+    			}
+
+    			const maxIndex = Math.max(colAIndex, colBIndex);
+
+    			return data.filter(row => {
+        			if (!row || row.length <= maxIndex) {
+            			// too short to safely read both columns → ignore
+            			return false;
+        		}
+
+        		const a = row[colAIndex];
+        		const b = row[colBIndex];
+
+        		if (a == null || b == null) {
+            			return false;
+        		}
+
+        		return a.toLowerCase() === colAValue.toLowerCase() &&
+               		b.toLowerCase() !== colBValue.toLowerCase();
+    			});
 		}
 
 		async function loadFilteredMYOData() {
@@ -166,10 +209,11 @@
 		}
 
 		
-		if(html == ""){
-			html = `<div class="myo"> <h4 class="myo-title">No Unused MYOs Found</h4></div>`;
-		}
 		const myogrid = document.getElementById("myo-grid");
+		if(html == ""){
+			html = `<div class="myo" style="width: 100%;"> <h4 class="myo-title">No Unused MYOs Found</h4></div>`;
+			myogrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
+		}
 
 		myogrid.innerHTML = html;
 
@@ -209,10 +253,12 @@
 		}
 
 		
-		if(html == ""){
-			html = `<div class="trait"> <h4 class="trait-title">No Unused Traits Found</h4></div>`;
-		}
 		const traitgrid = document.getElementById("trait-grid");
+		if(html == ""){
+			html = `<div class="trait" style="width: 100%"> <h4 class="trait-title">No Unused Traits Found</h4></div>`;
+			traitgrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
+		}
+		
 
 		traitgrid.innerHTML = html;
 
@@ -259,10 +305,12 @@
 		}
 
 		
-		if(html == ""){
-			html = `<div class="trait"> <h4 class="trait-title">No Unused Redesign Vouchers Found</h4></div>`;
-		}
 		const vouchergrid = document.getElementById("voucher-grid");
+		if(html == ""){
+			html = `<div class="voucher" style="width: 100%"> <h4 class="voucher-title">No Unused Vouchers Found</h4></div>`;
+			vouchergrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
+		}
+		
 
 		vouchergrid.innerHTML = html;
 
