@@ -7,15 +7,32 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="Planet.ico">
   <style>
-#myo-grid, #trait-grid, #voucher-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 280px);
-    gap: 1rem;
-    justify-content: center; /* centers the whole set of columns */
-}
+	#myo-grid, #trait-grid, #voucher-grid {
+    		display: grid;
+    		grid-template-columns: repeat(auto-fill, 280px);
+    		gap: 1rem;
+    		justify-content: center;
+	}
 
 
-.myo, .trait, .voucher { width: 280px; background: #582a98; padding: 1rem; border-radius: 8px; }
+	.myo, .trait, .voucher { 
+		width: 280px; 
+		background: #582a98; 
+		padding: 1rem; 
+		border-radius: 8px; 
+		display: flex; 
+		flex-direction: column; 
+		justify-content: center; 
+		align-items: center;}
+	.loading {
+    		width: 100%;
+    		padding: 1.5rem;
+    		background: #582a98;
+    		border-radius: 8px;
+    		text-align: center;
+    		box-sizing: border-box;
+	}
+
 
 	.myo-image, .trait-image, .voucher-image{
     		width: 100%;
@@ -24,7 +41,7 @@
     		border-radius: 6px;
 	}
 
-	.myo-title, .trait-title, .voucher-title{
+	.myo-title, .trait-title, .voucher-title, .loading h4{
     		margin: 0.5rem 0;
     		font-size: 1.2rem;
 		text-align: center;
@@ -38,7 +55,16 @@
   </style>
 </head>
 <body>
-	<header id="header"></header>
+	<header id="header">
+		<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/114938699_62EJrqIcgioS3BT.png" alt="Website Banner" class="banner">
+
+    		<nav>
+        		<ul id="button-bar">
+            			<li><a href="index.html">Home</a></li>
+            			<li><a href="https://toyhou.se/~world/53663.the-candyfloss">World</a></li>
+        		</ul>
+    		</nav>
+	</header>
 	<main>
 		<h1 id="title"> X's Inventory</h1>
 		<hr>
@@ -46,6 +72,7 @@
 		<article id="myos">
 			<div id="myo-header"><h2>MYOs</h2></div>
 			<div id="myo-body">
+				<div id="myo-loading" class="loading"><h4>Loading Myos</h4></div>
 				<div id="myo-grid">
 				</div>
 			</div>
@@ -55,6 +82,7 @@
 		<article id="traits">
 			<div id="traits-header"><h2>Traits & Packs</h2></div>
 			<div id="traits-body">
+				<div id="trait-loading" class="loading"><h4>Loading Traits</h4></div>
 				<div id="trait-grid">
 				</div>
 			</div>
@@ -63,13 +91,13 @@
 		<article id="vouchers">
 			<div id="vouchers-header"><h2>Redesign Vouchers: $0</h2></div>
 			<div id="vouchers-body">
+				<div id="voucher-loading" class="loading"><h4>Loading Vouchers</h4></div>
 				<div id="voucher-grid">
 				</div>
 			</div>
 		</article>
 	
 	</main>
-	<script src="scripts.js"></script>
 	<script>
 	async function main() {
 		const params = new URLSearchParams(window.location.search);
@@ -214,6 +242,9 @@
 			html = `<div class="myo" style="width: 100%;"> <h4 class="myo-title">No Unused MYOs Found</h4></div>`;
 			myogrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
 		}
+		
+		var loading = document.getElementById("myo-loading");
+		loading.style.display = "none";
 
 		myogrid.innerHTML = html;
 
@@ -258,6 +289,9 @@
 			html = `<div class="trait" style="width: 100%"> <h4 class="trait-title">No Unused Traits Found</h4></div>`;
 			traitgrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
 		}
+		
+		loading = document.getElementById("trait-loading");
+		loading.style.display = "none";
 		
 
 		traitgrid.innerHTML = html;
@@ -311,6 +345,8 @@
 			vouchergrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
 		}
 		
+		loading = document.getElementById("voucher-loading");
+		loading.style.display = "none";
 
 		vouchergrid.innerHTML = html;
 
