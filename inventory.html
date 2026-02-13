@@ -52,6 +52,26 @@
     		font-size: 0.9rem;
 		text-align: center;
 	}
+	.collapsible {
+    		cursor: pointer;
+    		display: flex;
+    		align-items: center;
+    		gap: 0.5rem;
+	}
+	.arrow {
+    		transition: transform 0.2s ease;
+	}
+	.collapsed .arrow {
+    		transform: rotate(-90deg);
+	}
+	.collapsible-content {
+    		display: block;
+	}
+	.collapsed + .collapsible-content {
+    		display: none;
+	}
+
+
   </style>
 </head>
 <body>
@@ -70,8 +90,8 @@
 		<hr>
 
 		<article id="myos">
-			<div id="myo-header"><h2>MYOs</h2></div>
-			<div id="myo-body">
+			<div id="myo-header" class="collapsible"><span class="arrow">▼</span><h2>MYOs</h2></div>
+			<div id="myo-body" class="collapsible-content">
 				<div id="myo-loading" class="loading"><h4>Loading Myos</h4></div>
 				<div id="myo-grid">
 				</div>
@@ -80,8 +100,8 @@
 
 
 		<article id="traits">
-			<div id="traits-header"><h2>Traits & Packs</h2></div>
-			<div id="traits-body">
+			<div id="traits-header" class="collapsible"><span class="arrow">▼</span><h2>Traits & Packs</h2></div>
+			<div id="traits-body" class="collapsible-content">
 				<div id="trait-loading" class="loading"><h4>Loading Traits</h4></div>
 				<div id="trait-grid">
 				</div>
@@ -89,8 +109,8 @@
 		</article>
 
 		<article id="vouchers">
-			<div id="vouchers-header"><h2>Redesign Vouchers: $0</h2></div>
-			<div id="vouchers-body">
+			<div id="vouchers-header" class="collapsible"><span class="arrow">▼</span><h2>Redesign Vouchers: $0</h2></div>
+			<div id="vouchers-body" class="collapsible-content">
 				<div id="voucher-loading" class="loading"><h4>Loading Vouchers</h4></div>
 				<div id="voucher-grid">
 				</div>
@@ -102,6 +122,14 @@
 	async function main() {
 		const params = new URLSearchParams(window.location.search);
 		var username = params.get("username") ?? "default";
+		
+		document.querySelectorAll(".collapsible").forEach(header => {
+    			header.addEventListener("click", () => {
+        			header.classList.toggle("collapsed");
+    			});
+		});
+
+
 
 		function capitalizeFirstWord(str) {
     			if (!str) return "";
@@ -224,16 +252,29 @@
 
 		for (let i = 0; i < myos.length; i++) { 
 			const myo = myos[i]
-			html += `<div class="myo"> 
-			<img class="myo-image" src="${myo[3]}">
-			<h4 class="myo-title">${capitalizeFirstWord(myo[4])} #${myo[2]}</h4>
-			<div class="myo-info">
-				<p>From: ${myo[5]}</p>
-				<p>Date: ${myo[6]}</p>
-			</div>
-			</div>
+			if (myo[4].toLowerCase().includes("admin") || myo[4].toLowerCase().includes("admin")) { 
+				html += `<div class="myo"> 
+				<img class="myo-image" src="${myo[3]}">
+				<h4 class="myo-title">${capitalizeFirstWord(myo[4])} #${myo[2]}</h4>
+				<div class="myo-info">
+					<p>From: ${myo[5]}</p>
+					<p>Date: ${myo[6]}</p>
+				</div>
+				</div>
 			
-			`;
+				`;
+			}else{
+				html += `<div class="myo"> 
+				<img class="myo-image" src="${myo[3]}">
+				<h4 class="myo-title">${capitalizeFirstWord(myo[4])}</h4>
+				<div class="myo-info">
+					<p>From: ${myo[5]} #${myo[2]}</p>
+					<p>Date: ${myo[6]}</p>
+				</div>
+				</div>
+			
+				`;
+			}
 		}
 
 		
@@ -352,7 +393,7 @@
 
 		const counter = document.getElementById("vouchers-header");
 		
-		counter.innerHTML = `<h2>Redesign Vouchers: $${total}</h2>`;
+		counter.innerHTML = `<span class="arrow">▼</span><h2>Redesign Vouchers: $${total}</h2>`;
 	}
 	main();
 	
