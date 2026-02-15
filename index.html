@@ -6,12 +6,33 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="Planet.ico">
   <style>
-	
+	.img-layer {
+    		position: relative;
+		width: 100%;
+	}
+	.img-layer .base {
+    		display: block;
+    		width: 100%;
+    		height: auto;
+	}
+	.img-layer .top {
+    		position: absolute;
+    		top: 50%;
+    		left: 50%;
+    		transform: translate(-50%, -50%);
+		width: 35%;
+    		height: auto;
+	}
+
   </style>
 </head>
 <body>
 	<header id="header">
-		<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/114938699_62EJrqIcgioS3BT.png" alt="Website Banner" class="banner">
+		<div class="img-layer">
+    			<img style="width: 100%;" src="bannerBG.png" class="base">
+    			<a href="https://toyhou.se/~world/53663.the-candyfloss"><img src="bannerGIF.gif" class="top"></a>
+		</div>
+
 
     		<nav>
         		<ul id="button-bar">
@@ -25,25 +46,27 @@
 			<div id="information-header"><h1>Information</h1></div>
 			<hr>
 			<div id="information-body" class="two-col">
-<div id="information-text" class="left">
-    <p>Please bear with us as we hunt down any remaining bugs and inconsistencies in the data. Additionally, if you could please check the inventories of all your old usernames and alert us of any username changes, we would greatly appreciate it.</p>
+				<div id="information-text" class="left">
+    					<p>Please bear with us as we hunt down any remaining bugs and inconsistencies in the data. Additionally, if you could please check the inventories of all your old usernames and alert us of any username changes, we would greatly appreciate it.</p>
 
-    <p>Additionally, do not hesitate to bring to our attention any suspected errors in your—or any—inventory. There were 1700+ unused myos in the old myo center that needed to be entered into the new system by hand. Errors will have occured and we will do our best to hunt them down, and we appreciate the help of alerting us to any errors you find.</p>
+    					<p>Additionally, do not hesitate to bring to our attention any suspected errors in your—or any—inventory. There were 1700+ unused myos in the old myo center that needed to be entered into the new system by hand. Errors will have occured and we will do our best to hunt them down, and we appreciate the help of alerting us to any errors you find.</p>
 
-    <p>For any errors with the website itself, please contact our developer: Katsumi-Draws.</p>
+    					<p>For any errors with the website itself, please contact our developer: Katsumi-Draws.</p>
 
-    <p>Enter your username below to check out what goodies you have access to!</p>
-</div>
+    					<p>Enter your username below to check out what goodies you have access to!</p>
+				</div>
 
-<div id="info-pic" class="right">
-    <img src="https://f2.toyhou.se/file/f2-toyhou-se/images/99574882_NFnvFIOqdlZ0Mu2.png">
-</div>
+				<div id="info-pic" class="right">
+    					<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/99574882_NFnvFIOqdlZ0Mu2.png">
+				</div>
 
 			</div>
 		</article>
 		<article id="onto-inventory">
 			<div class="two-col vertical-center">
-				<img id="btn-pic" src="https://f2.toyhou.se/file/f2-toyhou-se/images/93640345_rUDX1zEarYH9ZNZ.png" class="left">	
+				<div id="btn-pic" class="left">
+					<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/93640345_rUDX1zEarYH9ZNZ.png">	
+				</div>
 				<div class="right short">
 					<h1>Enter Username</h1>
 					<hr>

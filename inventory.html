@@ -7,6 +7,23 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="Planet.ico">
   <style>
+	.img-layer {
+    		position: relative;
+		width: 100%;
+	}
+	.img-layer .base {
+    		display: block;
+    		width: 100%;
+    		height: auto;
+	}
+	.img-layer .top {
+    		position: absolute;
+    		top: 50%;
+    		left: 50%;
+    		transform: translate(-50%, -50%);
+		width: 35%;
+    		height: auto;
+	}
 	#myo-grid, #trait-grid, #voucher-grid {
     		display: grid;
     		grid-template-columns: repeat(auto-fill, 280px);
@@ -19,18 +36,18 @@
 		width: 280px; 
 		background: #582a98; 
 		padding: 1rem; 
-		border-radius: 8px; 
 		display: flex; 
 		flex-direction: column; 
 		justify-content: center; 
-		align-items: center;}
+		align-items: center;
+		border-radius: 10px;}
 	.loading {
     		width: 100%;
     		padding: 1.5rem;
     		background: #582a98;
-    		border-radius: 8px;
     		text-align: center;
     		box-sizing: border-box;
+		border-radius: 10px;
 	}
 
 
@@ -76,7 +93,11 @@
 </head>
 <body>
 	<header id="header">
-		<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/114938699_62EJrqIcgioS3BT.png" alt="Website Banner" class="banner">
+		<div class="img-layer">
+    			<img style="width: 100%;" src="bannerBG.png" class="base">
+    			<a href="https://toyhou.se/~world/53663.the-candyfloss"><img src="bannerGIF.gif" class="top"></a>
+		</div>
+
 
     		<nav>
         		<ul id="button-bar">
@@ -86,42 +107,78 @@
     		</nav>
 	</header>
 	<main>
-		<h1 id="title"> X's Inventory</h1>
-		<hr>
+		<div id="onto-inventory" style="display: none;">
+			<h1>Enter Username</h1>
+			<hr>
+			<input class="input" id="username" type="text" placeholder="Enter Username..."></input>
+			<br>
+			<button id="inventory-button" class="btn" style="width: 75%;" disabled>Go To Inventory</button>
+		</div>
+		<div id="inventory">
+			<h1 id="title"> X's Inventory</h1>
+			<hr>
 
-		<article id="myos">
-			<div id="myo-header" class="collapsible"><span class="arrow">▼</span><h2>MYOs</h2></div>
-			<div id="myo-body" class="collapsible-content">
-				<div id="myo-loading" class="loading"><h4>Loading Myos</h4></div>
-				<div id="myo-grid">
+			<article id="myos">
+				<div id="myo-header" class="collapsible"><span class="arrow">▼</span><h2>MYOs</h2></div>
+				<div id="myo-body" class="collapsible-content">
+					<div id="myo-loading" class="loading"><h4>Loading Myos</h4></div>
+					<div id="myo-grid">
+					</div>
 				</div>
-			</div>
-		</article>
+			</article>
 
 
-		<article id="traits">
-			<div id="traits-header" class="collapsible"><span class="arrow">▼</span><h2>Traits & Packs</h2></div>
-			<div id="traits-body" class="collapsible-content">
-				<div id="trait-loading" class="loading"><h4>Loading Traits</h4></div>
-				<div id="trait-grid">
+			<article id="traits">
+				<div id="traits-header" class="collapsible"><span class="arrow">▼</span><h2>Traits & Packs</h2></div>
+				<div id="traits-body" class="collapsible-content">
+					<div id="trait-loading" class="loading"><h4>Loading Traits</h4></div>
+					<div id="trait-grid">
+					</div>
 				</div>
-			</div>
-		</article>
+			</article>
 
-		<article id="vouchers">
-			<div id="vouchers-header" class="collapsible"><span class="arrow">▼</span><h2>Redesign Vouchers: $0</h2></div>
-			<div id="vouchers-body" class="collapsible-content">
-				<div id="voucher-loading" class="loading"><h4>Loading Vouchers</h4></div>
-				<div id="voucher-grid">
+			<article id="vouchers">
+				<div id="vouchers-header" class="collapsible"><span class="arrow">▼</span><h2>Redesign Vouchers: $0</h2></div>
+				<div id="vouchers-body" class="collapsible-content">
+					<div id="voucher-loading" class="loading"><h4>Loading Vouchers</h4></div>
+					<div id="voucher-grid">
+					</div>
 				</div>
-			</div>
-		</article>
+			</article>
+		</div>
 	
 	</main>
 	<script>
 	async function main() {
 		const params = new URLSearchParams(window.location.search);
-		var username = params.get("username") ?? "default";
+		var username = params.get("username") ?? "";
+
+		if(username ==""){
+			const button = document.getElementById("onto-inventory");
+			const inventory = document.getElementById("inventory");
+			button.style.display = "block";
+			inventory.style.display = "none";
+
+
+			const invbtn = document.getElementById("inventory-button");
+			username = document.getElementById("username");
+
+			var userinput = username.value;
+
+			username.addEventListener("keyup", () => {
+				if(username.value.length > 0){
+					invbtn.disabled = false;
+				}else{
+					invbtn.disabled = true;
+				}
+				userinput = username.value;
+			});
+
+			invbtn.addEventListener("click", () => {
+    				const encoded = encodeURIComponent(userinput);
+				window.location.href = `inventory.html?username=${encoded}`;
+			});
+		}
 		
 		document.querySelectorAll(".collapsible").forEach(header => {
     			header.addEventListener("click", () => {
@@ -144,9 +201,6 @@
 		const title = document.getElementById("title");
 		title.innerHTML = `${username}'s Inventory`;
 
-		if(username =="default"){
-			//do something?
-		}
 
 		async function fetchCSV(url) {
     			const res = await fetch(url);
@@ -252,7 +306,7 @@
 
 		for (let i = 0; i < myos.length; i++) { 
 			const myo = myos[i]
-			if (myo[4].toLowerCase().includes("admin") || myo[4].toLowerCase().includes("admin")) { 
+			if (myo[4].toLowerCase().includes("admin") || myo[4].toLowerCase().includes("contributor")) { 
 				html += `<div class="myo"> 
 				<img class="myo-image" src="${myo[3]}">
 				<h4 class="myo-title">${capitalizeFirstWord(myo[4])} #${myo[2]}</h4>
