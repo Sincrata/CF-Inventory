@@ -23,6 +23,13 @@
 		width: 35%;
     		height: auto;
 	}
+	.btn{
+		color: #471c81;
+	}
+	.btn:hover {
+    		background: #008cba;
+		color: white;
+	}
 
   </style>
 </head>
@@ -36,67 +43,34 @@
 
     		<nav>
         		<ul id="button-bar">
-            			<li><a href="index.html">Home</a></li>
+            			<li><a href="information.html">Inventory</a></li>
             			<li><a href="https://toyhou.se/~world/53663.the-candyfloss">World</a></li>
+				<li><a href="https://discord.gg/kVzNUPyvBw">Discord</a></li>
         		</ul>
     		</nav>
 	</header>
 	<main>
 		<article id="information">
-			<div id="information-header"><h1>Information</h1></div>
+			<div id="information-header"><h1>What are Candyfloss?</h1></div>
 			<hr>
 			<div id="information-body" class="two-col">
 				<div id="information-text" class="left">
-    					<p>Please bear with us as we hunt down any remaining bugs and inconsistencies in the data. Additionally, if you could please check the inventories of all your old usernames and alert us of any username changes, we would greatly appreciate it.</p>
 
-    					<p>Additionally, do not hesitate to bring to our attention any suspected errors in your—or any—inventory. There were 1700+ unused myos in the old myo center that needed to be entered into the new system by hand. Errors will have occured and we will do our best to hunt them down, and we appreciate the help of alerting us to any errors you find.</p>
-
-    					<p>For any errors with the website itself, please contact our developer: Katsumi-Draws.</p>
-
-    					<p>Enter your username below to check out what goodies you have access to!</p>
+    					<p>The Candyfloss are a species of alien creatures
+ who live on a colorful planet, much like Earth. Here you can create or purchase a custom Candyfloss Character of your very own! You can name them, dress them up, give them a backstory and share them with other members just like you! You can join our community to participate in events, group role play, contests, livestreams and more!!</p>
+					<br>
+					<a class="btn" style="text-decoration: none; display: inline-block; width: 70%;" href="https://toyhou.se/~world/53663.the-candyfloss">Join the World!</a>
 				</div>
 
 				<div id="info-pic" class="right">
-    					<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/99574882_NFnvFIOqdlZ0Mu2.png">
+    					<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/19438127_pyKQ8TLmmh6msDo.png?1579987149">
 				</div>
 
 			</div>
 		</article>
-		<article id="onto-inventory">
-			<div class="two-col vertical-center">
-				<div id="btn-pic" class="left">
-					<img src="https://f2.toyhou.se/file/f2-toyhou-se/images/93640345_rUDX1zEarYH9ZNZ.png">	
-				</div>
-				<div class="right short">
-					<h1>Enter Username</h1>
-					<hr>
-					<input class="input" id="username" type="text" placeholder="Enter Username..."></input>
-					<br>
-					<button id="inventory-button" class="btn" style="width: 75%;" disabled>Go To Inventory</button>
-				</div>
-			</div>
-		</article>
-	
 	</main>
 	<script>
-		const invbtn = document.getElementById("inventory-button");
-		const username = document.getElementById("username");
 
-		var userinput = username.value;
-
-		username.addEventListener("keyup", () => {
-			if(username.value.length > 0){
-				invbtn.disabled = false;
-			}else{
-				invbtn.disabled = true;
-			}
-			userinput = username.value;
-		});
-
-		invbtn.addEventListener("click", () => {
-    			const encoded = encodeURIComponent(userinput);
-			window.location.href = `inventory.html?username=${encoded}`;
-		});
 
 
 	</script>
