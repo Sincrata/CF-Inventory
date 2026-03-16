@@ -24,7 +24,7 @@
 		width: 35%;
     		height: auto;
 	}
-	#myo-grid, #trait-grid, #voucher-grid, #event-grid{
+	#myo-grid, #trait-grid, #voucher-grid, #event-grid, #petpet-grid{
     		display: grid;
     		grid-template-columns: repeat(auto-fill, 280px);
     		gap: 1rem;
@@ -32,7 +32,7 @@
 	}
 
 
-	.myo, .trait, .voucher, .event{ 
+	.myo, .trait, .voucher, .event, .petpet{ 
 		width: 280px; 
 		background: #582a98; 
 		padding: 1rem; 
@@ -51,20 +51,20 @@
 	}
 
 
-	.myo-image, .trait-image, .voucher-image, .event-image{
+	.myo-image, .trait-image, .voucher-image, .event-image, .petpet-image{
     		width: 100%;
     		height: auto;
     		display: block;
     		border-radius: 6px;
 	}
 
-	.myo-title, .trait-title, .voucher-title, .event-title, .loading h4{
+	.myo-title, .trait-title, .voucher-title, .event-title, .petpet-title, .loading h4{
     		margin: 0.5rem 0;
     		font-size: 1.2rem;
 		text-align: center;
 	}
 
-	.myo-info p, .trait-info p, .voucher-info p, .event-info p{
+	.myo-info p, .trait-info p, .voucher-info p, .event-info p, .petpet-info p{
     		margin: 0;
     		font-size: 0.9rem;
 		text-align: center;
@@ -153,6 +153,21 @@
 				<div id="vouchers-body" class="collapsible-content">
 					<div id="voucher-loading" class="loading"><h4>Loading Vouchers</h4></div>
 					<div id="voucher-grid">
+					</div>
+				</div>
+			</article>
+
+			<article id="petpets">
+				<div id="petpet-header" class="collapsible"><span class="arrow">▼</span><h2>Petpet MYOs</h2></div>
+				<div id="petpet-body" class="collapsible-content">
+					<div id="disclaimer"><p><strong>Disclaimer!! The petpet tickets are still in the process of being logged and updated! 
+						You may not see tickets appear here yet, or you may notice a ticket appear that has already been used. 
+						All tickets prior to 2026 are liable to be incorrect while we are in the process of logging them into the new system.
+						 Please kappabear with us while we make this transition and hold off on notifying or asking staff about incorrect or missing tickets. 
+						There will be an announcement in the discord server, and this notice will be removed, when we believe the inventories to be tentatively correct! 
+						Please hold any questions or alerts until then, Thank you!</strong></p></div>
+					<div id="petpet-loading" class="loading"><h4>Loading Petpet MYOs</h4></div>
+					<div id="petpet-grid">
 					</div>
 				</div>
 			</article>
@@ -565,6 +580,58 @@
 		const counter = document.getElementById("vouchers-header");
 		
 		counter.innerHTML = `<span class="arrow">▼</span><h2>Redesign Vouchers: $${total}</h2>`;
+
+
+
+
+		async function loadFilteredPetpetData() {
+    			const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0exCOdni2TTA43W-_V9LKJCEk5dGTS5vVOHlBGqY0T9f_3xoZNGtotrKCIqI7c6TPsghx-s3gLgqt/pub?gid=2084318873&single=true&output=csv";
+
+    			const csv = await fetchCSV(url);
+    			const rows = parseCSV(csv);
+
+    			const results = filterRows(
+        			rows,
+        			"Username",  username,
+        			"Used", ""
+    			);
+
+    			console.log(results);
+			return results;
+		}
+
+		const petpets = await loadFilteredPetpetData();
+		
+		html = "";
+		
+
+		for (let i = 0; i < petpets.length; i++) { 
+			const petpet = petpets[i];
+			html += `<div class="petpet"> 
+			<img class="petpet-image" src="${petpet[1]}">
+			<h4 class="petpet-title">${petpet[2]}</h4>
+			<div class="petpet-info">
+				<p>From: ${petpet[3]}</p>
+				<p>Date: ${petpet[4]}</p>
+			</div>
+			</div>
+			
+			`;
+		}
+
+		
+		const petpetgrid = document.getElementById("petpet-grid");
+		if(html == ""){
+			html = `<div class="petpet" style="width: 100%"> <h4 class="petpet-title">No Unused Petpet MYOs Found</h4></div>`;
+			petpetgrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
+		}
+		
+		loading = document.getElementById("petpet-loading");
+		loading.style.display = "none";
+		
+
+		petpetgrid.innerHTML = html;
+
 	}
 	main();
 	
