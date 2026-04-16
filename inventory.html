@@ -342,15 +342,7 @@
 		
 		const events = await loadFilteredEventData();
 		
-		var htmlev = `<div class="event"> 
-				<img class="event-image" src="https://f2.toyhou.se/file/f2-toyhou-se/images/117395238_YNWiqNz6HhBeulj.png">
-				<h4 class="event-title">#&infin;</h4>
-				<div class="event-info">
-					<p>Used: ???</p>
-					<p>Expires: 4/20/26</p>
-				</div>
-				</div>
-				`;
+		var htmlev = "";
 		const eventgrid = document.getElementById("event-grid");
 		
 		for (let i = 0; i < events.length; i++) { 
