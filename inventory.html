@@ -362,11 +362,18 @@
 				<img class="event-image" src="${event[3]}">
 				<h4 class="event-title">#${event[0]} ${capitalizeFirstWord(event[4])}</h4>
 				<div class="event-info">
-					<p>Used: Unused</p>
-					<p>Expires: 5/1/26</p>
-				</div>
-				</div>
+					<p>Used: Unused</p>`;
 				
+
+				if(event[4].includes("Event")){
+					htmlev += "<p>Expires: 6/1/26</p>"
+				}else{
+					htmlev += "<p>Expires: 5/1/26</p>"
+				}
+
+				htmlev += `</div>
+				</div>
+
 				`;
 			}
 		}
